@@ -1,6 +1,29 @@
 import streamlit as st
 from groq import Groq
 
-st.set_page_config("pragyanAI Contect Generator", layout="wide")
-st.title("PragyanAI-Contect Generator")
-st.image("
+st.set_page_config("EshwariAI Contect Generator", layout="wide")
+st.title("EshwariAI-Contect Generator")
+st.image("download.jfif")
+client = Groq(api_key=st.secrets["GROQ_API_KEY"])
+product = st.text_input("Productr")
+audience = st.text_inout("Audience")
+if st.button("Generate Contect"):
+  prompt = f"Write marketing contect for {product} targeting {audience}."
+  response = client.chat.completions.create(
+    model="llama-3.3-70b-versatile",
+    meassages=[{"role": "user", "contect": prompt}]
+  )
+      st.session_state.text = response.choices[0].message.content
+    text =response.choices[0].message.content
+    st.write(text)
+# After Content Create - Download The File
+if "text" in st.session_state:
+    content = st.text_area("Generated Content", st.session_state.text, height=300)
+    st.download_button(
+            label="⬇️ Download as TXT",
+            data=content,
+            file_name="marketing_copy.txt",
+            mime="text/plain"
+        )
+    else:
+        st.info("Generate content first")
